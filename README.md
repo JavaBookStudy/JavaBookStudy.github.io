@@ -13,7 +13,8 @@ git clone https://github.com/JavaBookStudy/JavaBookStudy.github.io.git
 ```
 
 2. 위의 파일이 있는 곳으로 다시 vs code를 실행합니다.
-   이제 수정하고 싶으면,
+
+이제 수정하고 싶으면,
 
 ```
 git add .
