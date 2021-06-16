@@ -17,7 +17,7 @@ main:
 
 sidebar-contents:
   - title: "Effective Java"
-    url: /categories/#EffectiveJava
+    url: /categories/#Effective_Java
   - title: "토비의 스프링"
     url: /categories/#Toby
   #  - title: "토비의 스프링"
