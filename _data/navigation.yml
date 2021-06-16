@@ -4,6 +4,8 @@ main:
     url: /about/
   - title: "카테고리"
     url: /categories/
+    - title: "태그"
+    url: /tags/
   # - title: "About"
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   # - title: "Sample Posts"
@@ -14,6 +16,8 @@ main:
   #   url: /sitemap/
 
 sidebar-contents:
+  - title: "Effective Java"
+    url: /categories/#EffectiveJava
   - title: "토비의 스프링"
     children:
       - title: "Review"
