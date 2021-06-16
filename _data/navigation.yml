@@ -19,10 +19,12 @@ sidebar-contents:
   - title: "Effective Java"
     url: /categories/#EffectiveJava
   - title: "토비의 스프링"
-    children:
-      - title: "Review"
-        url: /categories/#review
-      - title: "Tips"
-        url: /categories/#tips
+    url: /categories/#Toby
+#  - title: "토비의 스프링"
+#    children:
+#      - title: "Review"
+#        url: /categories/#review
+#      - title: "Tips"
+#        url: /categories/#tips
   - title: "기타"
     url: /categories/#기타
