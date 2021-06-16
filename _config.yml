@@ -25,7 +25,7 @@ url: "https://javabookstudy.github.io/" # the base hostname & protocol for your 
 baseurl: # the subpath of your site, e.g. "/blog"
 repository: # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser: # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo: "/assets/images/pencil.png" # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
+logo: "/assets/images/spring-logo.png" # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title: # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute: 100
@@ -94,7 +94,7 @@ analytics:
 # Site Author
 author:
   name: "JavaBook"
-  avatar: "/assets/images/profile.jfif" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar: "/assets/images/spring-logo.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio: "토비의 스프링 책 읽기! 팀 블로그"
   location: "Korea"
   email:
