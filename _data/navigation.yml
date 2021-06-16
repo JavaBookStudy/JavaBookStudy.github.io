@@ -1,0 +1,24 @@
+# main links
+main:
+   - title: "소개"
+     url: /about/
+   - title: "카테고리"
+     url: /categories/
+  # - title: "About"
+  #   url: https://mmistakes.github.io/minimal-mistakes/about/
+  # - title: "Sample Posts"
+  #   url: /year-archive/
+  # - title: "Sample Collections"
+  #   url: /collection-archive/
+  # - title: "Sitemap"
+  #   url: /sitemap/
+
+sidebar-contents:
+ - title: "머신러닝&딥러닝"
+   children:
+    - title: "Review"
+      url: /categories/#review
+    - title: "Tips"
+      url: /categories/#tips
+ - title: "기타"
+   url: /categories/#기타
