@@ -1,0 +1,98 @@
+---
+title: "Effective Java - Chapter 12"
+subtitle: 이펙티브 자바 12장 정리
+date: 2021-05-19 13:59:23 +0900
+author: Integer
+toc: 
+categories: Effective_Java
+tags:
+  - Effective Java
+toc: true
+toc_sticky: true
+---
+
+> Effective Java
+
+# [Effective Java 3/E] 12장 동시성
+
+## Item 85. 자바 직렬화의 대안을 찾으라
+자바 직렬화는 어플리케이션을 보안에 취약하게 할 가능성이 높다. 특히 역직렬화는 신뢰할 수 없는 스트림을 다룰 때 원격 코드 실행, DoS 등의 공격으로 이어질 수 있게 한다.
+### 가젯 (gadget)
+: 역직렬화 과정에서 호출되어 잠재적으로 위험한 동작을 수행하는 메서드. 여러 가젯을 함께 사용하여 가젯 체인을 구성할 수도 있다 (가젯 체인).
+### 역직렬화 폭탄 (deserialization bomb)
+: 역직렬화에 시간이 오래 걸리는 짧은 스트림을 역직렬화하는 것만으로도 DoS 공격에 쉽게 노출될 수 있다.
+### 직렬화 위험 회피 방법
+- 아무것도 역직렬화하지 않는다. 특히 신뢰할 수 없는 데이터일수록 하지 말자.
+- 다른 직렬화 시스템을 사용한다. cross-platform 구조화된 데이터 표현인 JSON과 프로토콜 버퍼가 이에 해당한다.
+- 객체 역직렬화 필터링(java.io.ObjectInputFilter)을 사용한다. 신뢰할 수 없는 데이터의 직렬화를 피할 수 없을 때 사용한다. 필터를 설치하여 특정 클래스를 직렬화할지 선택할 수 있다. (ex. SWAT)
+## Item 86. Serializable을 구현할지는 신중히 결정하라
+- Serializable을 구현하면 릴리즈한 뒤에는 수정하기 어렵다. 특정 직렬화 형태를 계속 사용해야 하기 때문이다.
+- 직렬화는 OOP의 기본 매커니즘을 따라 객체를 생성하지 않는 방법이다. 불변식이 깨질 수 있고, 접근성 문제가 발생할 수 있다.
+- 직렬화를 구현하는 클래스의 새로운 버전을 릴리즈할 때 항상 구버전으로도 할 수 있는지 테스트해야 하는 부담이 생긴다.
+- 상속용으로 설계된 클래스나 인터페이스는 대부분 Serializable을 확장해서는 안 된다. 이를 상속받거나 구현하는 클래스도 Serializable을 구현하는 것에서 오는 문제 사항을 고려해야 하기 때문이다.
+- inner class는 직렬화를 구현하지 말아야 한다. inner class에서는 컴파일러가 생성한 필드들이 자동으로 추가될 수 있기 때문이다. 단, static inner class는 괜찮다.
+## Item 87. 커스텀 직렬화 형태를 고려해보라
+- 객체의 물리적 표현과 논리적 내용이 같다면 기본 직렬화 형태라도 괜찮다.
+- 객체의 물리적 표현과 논리적 표현의 차이가 클 때 기본 직렬화 형태를 사용할 경우 생기는 문제점
+- 공개 API가 현재의 내부 표현 방식에 영구히 묶인다.
+- 너무 많은 공간을 차지할 수 있다.
+- 직렬화 로직에 따라 시간이 너무 많이 걸릴 수 있다.
+- 기본 직렬화 과정은 객체 그래프를 재귀 순회하여 stack overflow를 일으킬 수 있다.
+## Item 88. readObject 메서드는 방어적으로 작성하라
+### readObject 메서드를 작성할 때 주의할 점
+- 어떤 바이트 스트림이 넘어오더라도 유효한 인스턴스를 만들어내야 한다.
+- 커스텀 직렬화를 사용할 경우 주의한다.
+- private이어야 하는 객체 참조 필드는 방어적 복사를 수행한다.
+- 방어적 복사 다음에는 불변식 검사를 수행한다.
+- 역직렬화 후 객체 그래프 전체의 유효성을 검사해야 한다면 ObjectInputValidation 인터페이스를 사용한다.
+- 재정의할 수 있는 메서드는 호출하지 않는다.
+## Item 89. 인스턴스 수를 통제해야 한다면 readResolve보다는 열거 타입을 사용하라
+### readResolve 메서드
+```
+// 싱글턴 패턴
+public class Elvis{
+    public static final Elvis INSTANCE = new Elvis();
+    private Elvis() {...}
+    
+    public void leaveTheBuilding() {...}
+}
+```
+- 싱글턴 패턴으로 구현한 클래스라도 Serializable을 구현하게 되는 순간 더 이상 싱글턴이 아니게 된다. readObject로 클래스의 인스턴스를 만들 수 있기 때문이다.
+- readResolve는 역직렬화 후 새로 생성된 객체가 readObject의 결괏값으로 바로 넘어가지 않고 기존 싱글턴 인스턴스 객체를 넘겨주게 한다. 새로 생성된 객체는 바로 GC 대상이 된다. 이 경우, 해당 클래스의 모든 인스턴스 필드는 모두 transient로 선언해야 한다.
+### readResolve 메서드의 접근성
+- final 클래스일 경우 readResolve 메서드는 private이어야 한다.
+- final이 아닌 클래스일 경우 ClassCastException이 발생하지 않도록 접근 범위를 고려해야 한다.
+## Item 90. 직렬화된 인스턴스 대신 직렬화 프록시 사용을 검토하라
+### 직렬화 프록시 패턴 (serialization proxy pattern)
+- 바깥 클래스의 논리적 상태를 표현하는 중첩 클래스를 설계해 proxy 역할을 하게 하고, 인수로 넘어온 인스턴스의 데이터를 복사하게 한다.
+- 프록시 수준에서 가짜 바이트 스트림 공격과 내부 필드 탈취 공격을 차단한다.
+- 원본 클래스의 불변성을 보장한다.
+- 역직렬화된 인스턴스와 원래 인스턴스가 달라도 정상 작동한다. (방어적 복사와 다른 부분!!)
+- 방어적 복사보다 느리다.
+```
+// 직렬화 프록시는 Serializable을 구현한다.
+// 아래 직렬화 프록시 클래스는 EnumSet을 직렬화할 때 사용하는 클래스이다.
+// private static으로 선언한다.
+private static class SerializationProxy <E extends Enum<E>> 
+       implements Serializable {
+    // EnumSet의 모든 인스턴스 필드를 똑같이 선언한다.
+    private final Class<E> elementType;
+    
+    private final Enum<?>[] elements;
+    
+    // 생성자는 단 하나여야 하며, 바깥 클래스(EnumSet)를 매개변수로 받는다.
+    SerializationProxy(EnumSet<E> set) {
+        elementType = set.elementType;
+        elements = set.toArray(new Enum<?>[0]);
+     }
+    // 직렬화 프록시 인스턴스의 데이터를 바깥 클래스로 바꾸어 반환한다.
+    private Object readResolve(){
+        EnumSet<E> result = EnumSet.nonOf(elementType);
+        for(Enum<?> e : elements)
+            result.add((E)e);
+        return result;
+    }
+    
+    private static final long serialVersionUID = ...;
+}
+```
