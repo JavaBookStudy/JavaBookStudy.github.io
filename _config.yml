@@ -93,9 +93,9 @@ analytics:
 
 # Site Author
 author:
-  name: "Taxol"
+  name: "JavaBook"
   avatar: "/assets/images/profile.jfif" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio: "AI researcher"
+  bio: "토비의 스프링 책 읽기! 팀 블로그"
   location: "Korea"
   email:
   links:
